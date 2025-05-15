@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Personal Finance Tracker</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+           background-color: cadetblue;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+        }
+
+        .expense-table {
+            margin-top: 30px;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+        }
+
+        .expense-item span {
+            font-size: 1.2rem;
+        }
+
+        .expense-item .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+          
+        }
+
+        .expense-item .delete-btn:hover {
+            background-color: darkred;
+        }
+
+        .summary-card {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Personal Finance Tracker</h1>
+
+        <!-- Expense Form -->
+        <form id="expenseForm">
+            <div class="mb-3">
+                <label for="expenseCategory" class="form-label">Category</label>
+                <input type="text" class="form-control" id="expenseCategory" required>
+            </div>
+            <div class="mb-3">
+                <label for="expenseAmount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="expenseAmount" required>
+            </div>
+            <div class="mb-3">
+                <label for="expenseDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="expenseDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Expense</button>
+        </form>
+
+        <!-- Expense List -->
+        <div class="expense-table">
+            <h3>Expense List</h3>
+            <div id="expenseList"></div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="summary-card">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Expenses</h5>
+                    <p id="totalExpenses" class="card-text">RS-0.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+     
+        let expenses = [];
+
+   
+        const expenseForm = document.getElementById('expenseForm');
+        const expenseCategory = document.getElementById('expenseCategory');
+        const expenseAmount = document.getElementById('expenseAmount');
+        const expenseDate = document.getElementById('expenseDate');
+        const expenseList = document.getElementById('expenseList');
+        const totalExpenses = document.getElementById('totalExpenses');
+
+       
+        expenseForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+          
+            const expense = {
+                category: expenseCategory.value,
+                amount: parseFloat(expenseAmount.value),
+                date: expenseDate.value,
+            };
+
+        
+            expenses.push(expense);
+
+      
+            expenseCategory.value = '';
+            expenseAmount.value = '';
+            expenseDate.value = '';
+
+            updateExpenseList();
+            updateTotalExpenses();
+        });
+
+       
+        function updateExpenseList() {
+            expenseList.innerHTML = '';
+
+            expenses.forEach((expense, index) => {
+                const expenseItem = document.createElement('div');
+                expenseItem.classList.add('expense-item');
+
+                expenseItem.innerHTML = `
+                    <span>${expense.category}</span>
+                    <span>$${expense.amount.toFixed(2)}</span>
+                    <span>${expense.date}</span>
+                    <button class="delete-btn" onclick="deleteExpense(${index})">Delete</button>
+                `;
+
+                expenseList.appendChild(expenseItem);
+            });
+        }
+
+      
+        function updateTotalExpenses() {
+            const total = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+            totalExpenses.textContent = `$${total.toFixed(2)}`;
+        }
+
+        
+        function deleteExpense(index) {
+            expenses.splice(index, 1);
+
+ 
+            updateExpenseList();
+            updateTotalExpenses();
+        }
+    </script>
+</body>
+
+</html>
