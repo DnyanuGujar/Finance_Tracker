@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Personal Finance Tracker</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-           background-color: cadetblue;
+            background-color: cadetblue;
             font-family: Arial, sans-serif;
         }
 
@@ -26,20 +25,26 @@
         .expense-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 8px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 8px;
         }
 
         .expense-item span {
-            font-size: 1.2rem;
+            font-size: 1rem;
+            margin-right: 10px;
+            flex: 1;
         }
 
         .expense-item .delete-btn {
             background-color: red;
             color: white;
             border: none;
-            padding: 5px;
+            padding: 5px 10px;
             border-radius: 5px;
-          
+            cursor: pointer;
         }
 
         .expense-item .delete-btn:hover {
@@ -64,7 +69,7 @@
             </div>
             <div class="mb-3">
                 <label for="expenseAmount" class="form-label">Amount</label>
-                <input type="number" class="form-control" id="expenseAmount" required>
+                <input type="number" class="form-control" id="expenseAmount" required min="0.01" step="0.01">
             </div>
             <div class="mb-3">
                 <label for="expenseDate" class="form-label">Date</label>
@@ -90,16 +95,13 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JS -->
     <script>
-     
         let expenses = [];
 
-   
         const expenseForm = document.getElementById('expenseForm');
         const expenseCategory = document.getElementById('expenseCategory');
         const expenseAmount = document.getElementById('expenseAmount');
@@ -107,21 +109,45 @@
         const expenseList = document.getElementById('expenseList');
         const totalExpenses = document.getElementById('totalExpenses');
 
-       
+        // Load from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedExpenses = localStorage.getItem('expenses');
+            if (storedExpenses) {
+                expenses = JSON.parse(storedExpenses);
+                updateExpenseList();
+                updateTotalExpenses();
+            }
+        });
+
+        // Save expenses to localStorage
+        function saveExpensesToLocalStorage() {
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+        }
+
+        // Form submission
         expenseForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-          
+            const category = expenseCategory.value.trim();
+            const amount = parseFloat(expenseAmount.value);
+            const date = expenseDate.value;
+
+            // Basic Validation
+            if (!category || isNaN(amount) || amount <= 0 || !date) {
+                alert("Please enter valid values for all fields.");
+                return;
+            }
+
             const expense = {
-                category: expenseCategory.value,
-                amount: parseFloat(expenseAmount.value),
-                date: expenseDate.value,
+                category,
+                amount,
+                date,
             };
 
-        
             expenses.push(expense);
+            saveExpensesToLocalStorage();
 
-      
+            // Clear form
             expenseCategory.value = '';
             expenseAmount.value = '';
             expenseDate.value = '';
@@ -130,7 +156,7 @@
             updateTotalExpenses();
         });
 
-       
+        // Update expense list
         function updateExpenseList() {
             expenseList.innerHTML = '';
 
@@ -140,7 +166,7 @@
 
                 expenseItem.innerHTML = `
                     <span>${expense.category}</span>
-                    <span>$${expense.amount.toFixed(2)}</span>
+                    <span>₹${expense.amount.toFixed(2)}</span>
                     <span>${expense.date}</span>
                     <button class="delete-btn" onclick="deleteExpense(${index})">Delete</button>
                 `;
@@ -149,17 +175,16 @@
             });
         }
 
-      
+        // Update total expenses
         function updateTotalExpenses() {
             const total = expenses.reduce((acc, expense) => acc + expense.amount, 0);
-            totalExpenses.textContent = `$${total.toFixed(2)}`;
+            totalExpenses.textContent = `RS-${total.toFixed(2)}`;
         }
 
-        
+        // Delete expense
         function deleteExpense(index) {
             expenses.splice(index, 1);
-
- 
+            saveExpensesToLocalStorage();
             updateExpenseList();
             updateTotalExpenses();
         }
