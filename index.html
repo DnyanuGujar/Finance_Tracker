@@ -23,11 +23,12 @@
         body {
             background-color: var(--dark-bg);
             font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem; /* Decreased base font size */
             color: var(--text-color);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 650px; /* Decreased overall container width */
             margin-top: 50px;
             padding: 30px;
             background-color: var(--white);
@@ -35,7 +36,15 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        h2, h4 {
+        h2 {
+            font-size: 1.8rem; /* Adjusted for smaller base font */
+            color: var(--dark-bg);
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        h4 {
+            font-size: 1.2rem; /* Adjusted for smaller base font */
             color: var(--dark-bg);
             font-weight: 600;
             margin-bottom: 25px;
@@ -44,39 +53,56 @@
         .form-label {
             font-weight: 400;
             color: var(--text-color);
+            font-size: 0.85rem; /* Slightly smaller label font */
         }
 
         .form-control {
             border-radius: 8px;
             border: 1px solid #DCDCDC;
-            padding: 10px 15px;
+            padding: 8px 12px; /* Decreased padding */
+            font-size: 0.9rem; /* Ensures input text size matches body */
             box-shadow: none;
             transition: border-color 0.2s;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25); /* Adjusted for new primary color */
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            padding: 10px 30px;
+            padding: 8px 25px; /* Decreased padding */
             border-radius: 8px;
             font-weight: 600;
+            font-size: 0.9rem; /* Adjusted button font size */
             transition: background-color 0.2s, border-color 0.2s;
             float: right;
         }
 
         .btn-primary:hover {
-            background-color: #2980B9; /* Slightly darker blue */
+            background-color: #2980B9;
             border-color: #2980B9;
         }
 
+        /* The form-wrapper is no longer strictly necessary since the container is smaller,
+           but keeping it for structure if you decide to expand the container again.
+           However, I'm removing the `expense-form-col` specific max-width
+           because the main container now dictates the max-width. */
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .expense-form-col {
+            width: 100%; /* Now it takes 100% of the smaller container */
+        }
+
+
         .expense-table {
-            margin-top: 40px;
-            padding-top: 20px;
+            margin-top: 30px; /* Slightly decreased margin */
+            padding-top: 15px; /* Slightly decreased padding */
             border-top: 1px solid var(--light-bg);
         }
 
@@ -84,10 +110,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
+            padding: 10px 12px; /* Decreased padding */
             background-color: var(--light-bg);
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Decreased margin */
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s ease-in-out;
         }
@@ -97,8 +123,8 @@
         }
 
         .expense-item span {
-            font-size: 1.0rem;
-            margin-right: 15px;
+            font-size: 0.9rem; /* Adjusted for smaller base font */
+            margin-right: 10px; /* Decreased margin */
             flex: 1;
             color: var(--text-color);
             font-weight: 400;
@@ -113,10 +139,10 @@
             background-color: var(--danger-color);
             color: var(--white);
             border: none;
-            padding: 6px 12px;
+            padding: 4px 10px; /* Decreased padding */
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Adjusted button font size */
             transition: background-color 0.2s;
         }
 
@@ -125,31 +151,31 @@
         }
 
         .summary-card {
-            margin-top: 40px;
+            margin-top: 30px; /* Slightly decreased margin */
         }
 
         .card {
             border: none;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            background-color: var(--primary-color); /* Uses the new primary color */
+            background-color: var(--primary-color);
             color: var(--white);
         }
 
         .card-body {
-            padding: 25px;
+            padding: 20px; /* Decreased padding */
             text-align: center;
         }
 
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem; /* Adjusted for smaller base font */
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Decreased margin */
             color: var(--white);
         }
 
         .card-text {
-            font-size: 2.2rem;
+            font-size: 1.8rem; /* Adjusted for smaller base font */
             font-weight: 600;
             color: var(--white);
         }
@@ -160,30 +186,34 @@
     <div class="container">
         <h2 class="text-center">Personal Finance Tracker</h2>
 
-        <form id="expenseForm">
-            <div class="mb-3">
-                <label for="expenseCategory" class="form-label">Category</label>
-                <input type="text" class="form-control" id="expenseCategory" required>
+        <div class="form-wrapper">
+            <div class="expense-form-col">
+                <form id="expenseForm">
+                    <div class="mb-3">
+                        <label for="expenseCategory" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="expenseCategory" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseAmount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="expenseAmount" required min="0.01" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="expenseDate" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Expense</button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="expenseAmount" class="form-label">Amount</label>
-                <input type="number" class="form-control" id="expenseAmount" required min="0.01" step="0.01">
-            </div>
-            <div class="mb-3">
-                <label for="expenseDate" class="form-label">Date</label>
-                <input type="date" class="form-control" id="expenseDate" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Add Expense</button>
-        </form>
+        </div>
 
-        ---
+        <hr style="margin-top: 30px; border-color: var(--light-bg);">
 
         <div class="expense-table">
             <h4 class="text-center">Expense List</h4>
             <div id="expenseList"></div>
         </div>
 
-        ---
+        <hr style="margin-top: 30px; border-color: var(--light-bg);">
 
         <div class="summary-card">
             <div class="card">
